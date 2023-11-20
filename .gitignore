@@ -1,4 +1,5 @@
-*.psfx
+*.pfsx
 .ipynb_checkpoints/*
 *.wav
 *.WAV
+*.eaf.*
