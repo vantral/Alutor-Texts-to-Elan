@@ -1,0 +1,4 @@
+*.psfx
+.ipynb_checkpoints/*
+*.wav
+*.WAV

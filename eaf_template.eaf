@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ANNOTATION_DOCUMENT AUTHOR="unspecified" DATE="{{ cur_time }}" FORMAT="3.0" VERSION="3.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.mpi.nl/tools/elan/EAFv3.0.xsd">
+    <HEADER MEDIA_FILE="" TIME_UNITS="milliseconds">
+        <MEDIA_DESCRIPTOR MEDIA_URL="{{ filename }}" MIME_TYPE="audio/x-wav" RELATIVE_MEDIA_URL="{{ filename }}"/>
+        <PROPERTY NAME="lastUsedAnnotationId">0</PROPERTY>
+    </HEADER>
+    <TIME_ORDER>
+        {% for time in times %}
+        <TIME_SLOT TIME_SLOT_ID="ts{{time[1]}}" TIME_VALUE="{{time[0]}}"/>
+        {% endfor %}
+    </TIME_ORDER>
+
+
+    <TIER LINGUISTIC_TYPE_REF="transcription" TIER_ID="tx">
+    {% for transcription in transcriptions %}
+        <ANNOTATION>
+            <ALIGNABLE_ANNOTATION ANNOTATION_ID="a{{transcription['id']}}"
+                TIME_SLOT_REF1="ts{{transcription['start_time']}}" TIME_SLOT_REF2="ts{{transcription['time']}}">
+                <ANNOTATION_VALUE>{{transcription['text']}}</ANNOTATION_VALUE>
+            </ALIGNABLE_ANNOTATION>
+        </ANNOTATION>
+    {% endfor %}
+    </TIER>
+    <TIER LINGUISTIC_TYPE_REF="translation" PARENT_REF="tx" TIER_ID="tr">
+        {% for translation in translations %}
+        <ANNOTATION>
+            <ALIGNABLE_ANNOTATION ANNOTATION_ID="a{{translation['id']}}"
+                TIME_SLOT_REF1="ts{{translation['start_time']}}" TIME_SLOT_REF2="ts{{translation['time']}}">
+                <ANNOTATION_VALUE>{{translation['text']}}</ANNOTATION_VALUE>
+            </ALIGNABLE_ANNOTATION>
+        </ANNOTATION>
+        {% endfor %}
+    </TIER>
+    <TIER LINGUISTIC_TYPE_REF="comment" PARENT_REF="tx" TIER_ID="comm">
+        {% for comment in comments %}
+        <ANNOTATION>
+            <ALIGNABLE_ANNOTATION ANNOTATION_ID="a{{comment['id']}}"
+                TIME_SLOT_REF1="ts{{comment['start_time']}}" TIME_SLOT_REF2="ts{{comment['time']}}">
+                <ANNOTATION_VALUE>{{comment['text']}}</ANNOTATION_VALUE>
+            </ALIGNABLE_ANNOTATION>
+        </ANNOTATION>
+        {% endfor %}
+    </TIER>
+    <TIER LINGUISTIC_TYPE_REF="problems" PARENT_REF="tx" TIER_ID="pr">
+        {% for problem in problems %}
+        <ANNOTATION>
+            <ALIGNABLE_ANNOTATION ANNOTATION_ID="a{{problem['id']}}"
+                TIME_SLOT_REF1="ts{{problem['start_time']}}" TIME_SLOT_REF2="ts{{problem['time']}}">
+                <ANNOTATION_VALUE>{{problem['text']}}</ANNOTATION_VALUE>
+            </ALIGNABLE_ANNOTATION>
+        </ANNOTATION>
+        {% endfor %}
+    </TIER>
+
+    <LINGUISTIC_TYPE LINGUISTIC_TYPE_ID="transcription" GRAPHIC_REFERENCES="false" TIME_ALIGNABLE="true"/>
+    <LINGUISTIC_TYPE CONSTRAINTS="Symbolic_Association" GRAPHIC_REFERENCES="false" LINGUISTIC_TYPE_ID="translation" TIME_ALIGNABLE="true"/>
+    <LINGUISTIC_TYPE CONSTRAINTS="Symbolic_Association" GRAPHIC_REFERENCES="false" LINGUISTIC_TYPE_ID="problems" TIME_ALIGNABLE="true"/>
+    <LINGUISTIC_TYPE CONSTRAINTS="Symbolic_Association" GRAPHIC_REFERENCES="false" LINGUISTIC_TYPE_ID="comment" TIME_ALIGNABLE="true"/>
+    <LANGUAGE LANG_DEF="https://iso639-3.sil.org/code/alr" LANG_ID="alr" LANG_LABEL="Alutor (alr)"/>
+    <CONSTRAINT DESCRIPTION="Time subdivision of parent annotation's time interval, no time gaps allowed within this interval" STEREOTYPE="Time_Subdivision"/>
+    <CONSTRAINT DESCRIPTION="Symbolic subdivision of a parent annotation. Annotations refering to the same parent are ordered" STEREOTYPE="Symbolic_Subdivision"/>
+    <CONSTRAINT DESCRIPTION="1-1 association with a parent annotation" STEREOTYPE="Symbolic_Association"/>
+    <CONSTRAINT DESCRIPTION="Time alignable annotations within the parent annotation's time interval, gaps are allowed" STEREOTYPE="Included_In"/>
+</ANNOTATION_DOCUMENT>
